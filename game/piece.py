@@ -1,7 +1,7 @@
 import sys
 from game.settings import *
 from game import color as clr
-from colorama import Fore, Back, Style, init
+#from colorama import Fore, Back, Style, init
 
 __author__ = 'bengt'
 

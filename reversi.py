@@ -16,7 +16,13 @@ def main():
     parser.add_argument('--player', help="If you want to play against the ai", action='store_true')
     parser.add_argument('--ai', help="If you want the ais to play against each other", action='store_true')
     parser.add_argument('--verify', help="Verify AI using a random player", action='store_true')
-
+#Mohammd start
+    parser.add_argument('--test', help="Test our AI against an existing AI", action='store_true')
+    parser.add_argument('--depth', help="depth of search.",
+                        type=int, default=1)
+    parser.add_argument('--result_path', help="path to store the result of game.",
+                        type=str, default="results/res.txt")
+#Mohammad end
     args = parser.parse_args()
 
     if args.timeout < 0:
@@ -27,15 +33,25 @@ def main():
         players = ['player', 'ai']
     if args.ai:
         players = ['ai', 'ai']
+#Mohammad start
+    if args.test:
+        players = ['ai', 'testAI']
+#Mohammad end
     elif args.verify:
         players = ['ai', 'random']
     if not players:
         players = ['ai', 'player']
 
-    game = Game(timeout=args.timeout,
+    game = Game(
+#Mohammad start
+		depth=args.depth,
+		result_path=args.result_path,
+#Mohammad end
+		timeout=args.timeout,
                 display_moves=args.display_moves,
                 colour=args.colour,
-                players=players)
+                players=players,
+		)
     game.run()
 
 

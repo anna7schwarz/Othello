@@ -1,6 +1,6 @@
 from game.piece import Piece
 from game.settings import *
-from colorama import Style, init
+#from colorama import Style, init
 
 __author__ = 'bengt'
 

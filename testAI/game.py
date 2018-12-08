@@ -2,9 +2,6 @@ import os
 from collections import deque
 from game.board import Board
 from game.controllers import PlayerController, AiController
-#Moahammad start
-from testAI.controllers import testAiController
-#Moahmmad end
 from game.random_controller import RandomController
 from game.settings import *
 
@@ -14,19 +11,12 @@ __author__ = 'bengt'
 class Game(object):
     """Game ties everything together. It has a board,
     two controllers, and can draw to the screen."""
-#Mohammad start
-####    def __init__(self, timeout=1,
-####                 display_moves=True,
-####                 players=['ai', 'ai'],
-####                 colour=False):
-####
-    def __init__(self,depth,result_path, timeout=1,
+
+    def __init__(self, timeout=1,
                  display_moves=True,
                  players=['ai', 'ai'],
                  colour=False):
-        self.depth = depth
-        self.result_path = result_path
-#Mohammad end
+
         self.board = Board(colour)
         self.timeout = timeout
         self.ai_counter = 0
@@ -44,7 +34,6 @@ class Game(object):
         self.previous_round_passed = False
 
     def _make_controller(self, colour, controller_type):
-        print(colour, controller_type)
         """ Returns a controller with the specified colour.
             'player' == PlayerController,
             'ai' == AiController.
@@ -53,13 +42,9 @@ class Game(object):
             return PlayerController(colour)
         elif controller_type == 'random':
             return RandomController(colour)
-#Mohammad start
-        elif controller_type == 'testAI':
-            return testAiController(self.ai_counter, colour, self.timeout)
-#Mohammad end
         else:
             self.ai_counter += 1
-            return AiController(self.ai_counter, colour, self.depth)
+            return AiController(self.ai_counter, colour, self.timeout)
 
     def show_info(self):
         """ Prints game information to stdout.
@@ -109,12 +94,7 @@ class Game(object):
                     print("Game Over")
                     blacks = len([p for p in self.board.pieces if p.get_state() == BLACK])
                     whites = len([p for p in self.board.pieces if p.get_state() == WHITE])
-#Mohammad start
-                    score = blacks - whites
-                    buf = "%d\n" % (score)
-                    with open(self.result_path, "a") as myfile:
-                        myfile.write(buf)
-#Mohammad end
+
                     if blacks > whites:
                         print("Black won this game.")
                         exit()
