@@ -20,12 +20,13 @@ class Game(object):
 ####                 players=['ai', 'ai'],
 ####                 colour=False):
 ####
-    def __init__(self,depth,result_path, timeout=1,
+    def __init__(self,showboard,depth,result_path, timeout=1,
                  display_moves=True,
                  players=['ai', 'ai'],
                  colour=False):
         self.depth = depth
         self.result_path = result_path
+        self.showboard = showboard
 #Mohammad end
         self.board = Board(colour)
         self.timeout = timeout
@@ -44,13 +45,14 @@ class Game(object):
         self.previous_round_passed = False
 
     def _make_controller(self, colour, controller_type):
-        print(colour, controller_type)
+        if self.showboard:
+           print(colour, controller_type)
         """ Returns a controller with the specified colour.
             'player' == PlayerController,
             'ai' == AiController.
         """
         if controller_type == 'player':
-            return PlayerController(colour)
+            return PlayerController(self.showboard,colour)
         elif controller_type == 'random':
             return RandomController(colour)
 #Mohammad start
@@ -59,7 +61,7 @@ class Game(object):
 #Mohammad end
         else:
             self.ai_counter += 1
-            return AiController(self.ai_counter, colour, self.depth)
+            return AiController(self.showboard,self.ai_counter, colour, self.depth)
 
     def show_info(self):
         """ Prints game information to stdout.
@@ -83,11 +85,14 @@ class Game(object):
         """ Prints the possible moves to stdout.
         """
         moves = [self.to_board_coordinates(piece.get_position()) for piece in self.board.get_move_pieces(self.player)]
-
+##Mohammad start
+        my_moves = [self.to_my_coordinates(piece.get_position()) for piece in self.board.get_move_pieces(self.player)]
+##Mohammad end
         if not moves:
             raise NoMovesError
 
-        print("Possible moves are: ", moves)
+        #print("Possible moves are: ", moves)
+        print("Possible moves are: ", my_moves)
         self.board.clear_moves()
 
     def run(self):
@@ -95,12 +100,17 @@ class Game(object):
             current player to make its decision before it processes it and then goes on repeating itself.
         """
         while True:
-            os.system('clear')
-            self.show_info()
-            self.show_board()
-
+#Mohammad start            
+            if self.showboard:
+                os.system('clear')
+                self.show_info()
+                self.show_board()
+#Moahmamd end
             try:
-                self.show_commands()
+#Mohammad start 
+                if self.showboard:
+                    self.show_commands()
+#Mohammad end                
                 next_move = self.controllers[0].next_move(self.board)
                 self.board.make_move(next_move, self.controllers[0].get_colour())
                 self.previous_round_passed = False
@@ -128,8 +138,11 @@ class Game(object):
                     self.previous_round_passed = True
 
             self.controllers.rotate()
-
-            print("Current move is: ", self.to_board_coordinates(next_move))
+            if self.showboard:
+               #print("Current move is: ", self.to_board_coordinates(next_move))
+               print("Current move is: ", self.to_my_coordinates(next_move))
+            elif str(self.controllers[0]) == "Player":
+               print(self.to_my_coordinates(next_move))   
 
             self.previous_move = next_move
 
@@ -138,3 +151,11 @@ class Game(object):
         """
         x, y = coordinate
         return '{0}{1}'.format(chr(ord('a') + x), y + 1)
+#Mohammad start
+
+    def to_my_coordinates(self, coordinate):
+        """ Transforms an (x, y) tuple into (y+1, x+1) tuple.
+        """
+        x, y = coordinate
+        return '({0},{1})'.format( y + 1,x+1)
+#Mohammad end

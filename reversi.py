@@ -22,6 +22,7 @@ def main():
                         type=int, default=1)
     parser.add_argument('--result_path', help="path to store the result of game.",
                         type=str, default="results/res.txt")
+    parser.add_argument('--showboard', help="Show the board and scores", action='store_true')
 #Mohammad end
     args = parser.parse_args()
 
@@ -44,6 +45,7 @@ def main():
 
     game = Game(
 #Mohammad start
+                showboard=args.showboard,
 		depth=args.depth,
 		result_path=args.result_path,
 #Mohammad end

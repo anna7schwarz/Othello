@@ -28,8 +28,9 @@ class PlayerController(Controller):
     """ Controller for a real, alive and kicking player.
     """
 
-    def __init__(self, colour):
+    def __init__(self,showboard, colour):
         self.colour = colour
+        self.showboard = showboard
 
     def next_move(self, board):
         """ Will return a single valid move as an (x, y) tuple.
@@ -40,17 +41,27 @@ class PlayerController(Controller):
         """
         result = None
         while result is None:
-            event = input('Enter a coordinate, ex: c3, or Ctrl+D to quit: ')
+#Mohammad start
+            ###event = input('Enter a coordinate, ex: c3, or Ctrl+D to quit: ')
+            if self.showboard:
+                event = input('Enter a coordinate, ex: (x,y), or Ctrl+D to quit: ')
+            else:
+                event = input()
+#Mohammad end            
             # if event[0] == '/':
             #     if event[1:] == 'quit' or event[1:] == 'q':
             #         print('Quitting. Thank you for playing.')
             #         exit()
             # else:
             try:
-                if len(event) != 2:
-                    raise ValueError
-                x, y = event[0], event[1]
-                result = self._parse_coordinates(x, y)
+               ### if len(event) != 2:
+               ###     raise ValueError
+               ### x, y = event[0], event[1]
+                x,_, y = event.partition(',')
+                x = int( x.lstrip('('))-1
+                y = int ( y.rstrip(')'))-1
+                #result = self._parse_coordinates(x, y)
+                result = (y,x)
                 found_moves = [p.get_position() for p in board.get_move_pieces(self.get_colour())]
 
                 if not found_moves:
@@ -91,15 +102,21 @@ class AiController(Controller):
     """ Artificial Intelligence Controller.
     """
 
-    def __init__(self, id, colour, depth):
+    def __init__(self,showboard , id, colour, depth):
         self.id = id
         self.colour = colour
         self.depth = depth
+#Mohammad start'
+        self.showboard = showboard
+#Mohamamd end
 
     def next_move(self, board):
         #Will return a single valid move as an (x, y) tuple.
         ai = AlphaBetaPruner(self.depth, board.pieces)
-        print('Thinking...')
+#Mohammad start
+        if self.showboard:
+           print('Thinking...')
+#Moahmmad end        
         return ai.startAlphaBeta()
         
 

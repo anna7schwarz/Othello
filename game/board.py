@@ -19,7 +19,8 @@ class Board(object):
     def draw(self):
         """ Returns a representation of the board in monochrome or 256 RGB colour.
         """
-        labels = "  a.b.c.d.e.f.g.h."
+#        labels = "  a.b.c.d.e.f.g.h."
+        labels = "  1.2.3.4.5.6.7.8."
 
         grid = ''
         i = 0
