@@ -4,6 +4,7 @@ from game.board import Board
 from game.controllers import PlayerController, AiController
 #Moahammad start
 from testAI.controllers import testAiController
+import time
 #Moahmmad end
 from game.random_controller import RandomController
 from game.settings import *
@@ -20,13 +21,15 @@ class Game(object):
 ####                 players=['ai', 'ai'],
 ####                 colour=False):
 ####
-    def __init__(self,showboard,depth,result_path, timeout=1,
+    def __init__(self,logmoves,logpath,showboard,depth,result_path, timeout=1,
                  display_moves=True,
                  players=['ai', 'ai'],
                  colour=False):
         self.depth = depth
         self.result_path = result_path
         self.showboard = showboard
+        self.logmoves = logmoves
+        self.logpath = logpath
 #Mohammad end
         self.board = Board(colour)
         self.timeout = timeout
@@ -99,6 +102,8 @@ class Game(object):
         """ The game loop will print game information, the board, the possible moves, and then wait for the
             current player to make its decision before it processes it and then goes on repeating itself.
         """
+        time_of_start = time.time()
+        previous_move_time = time_of_start
         while True:
 #Mohammad start            
             if self.showboard:
@@ -142,7 +147,12 @@ class Game(object):
                #print("Current move is: ", self.to_board_coordinates(next_move))
                print("Current move is: ", self.to_my_coordinates(next_move))
             elif str(self.controllers[0]) == "Player":
-               print(self.to_my_coordinates(next_move))   
+               print(self.to_my_coordinates(next_move))
+            if self.logmoves:
+                    with open(self.logpath, "a") as myfile:
+                        myfile.write(str(self.controllers[1]) + ":\t" + self.to_my_coordinates(next_move) + "\t" + str(time.time()-time_of_start)+"\t"+str(time.time()-previous_move_time)+ "\n")
+                        previous_move_time = time.time();
+                        
 
             self.previous_move = next_move
 

@@ -23,6 +23,9 @@ def main():
     parser.add_argument('--result_path', help="path to store the result of game.",
                         type=str, default="results/res.txt")
     parser.add_argument('--showboard', help="Show the board and scores", action='store_true')
+    parser.add_argument('--logmoves', help="Log the moves into the file or not", action='store_true')
+    parser.add_argument('--log_path', help="path to store the log of game.",
+                        type=str, default="logs/log.txt")
 #Mohammad end
     args = parser.parse_args()
 
@@ -44,7 +47,9 @@ def main():
         players = ['ai', 'player']
 
     game = Game(
-#Mohammad start
+#Mohammad start 
+                logmoves=args.logmoves,
+                logpath=args.log_path,
                 showboard=args.showboard,
 		depth=args.depth,
 		result_path=args.result_path,
