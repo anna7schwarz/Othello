@@ -21,31 +21,39 @@ class Game(object):
 ####                 players=['ai', 'ai'],
 ####                 colour=False):
 ####
-	def __init__(self,logmoves,logpath,showboard,depth,result_path, timeout=1,
+	def __init__(self,init_board,logmoves,logpath,showboard,depth,result_path, timeout=1,
 				 display_moves=True,
 				 players=['ai', 'ai'],
 				 colour=False):
-		self.depth = depth
-		self.result_path = result_path
-		self.showboard = showboard
-		self.logmoves = logmoves
-		self.logpath = logpath
+                self.depth = depth
+                self.result_path = result_path
+                self.showboard = showboard
+                self.logmoves = logmoves
+                self.logpath = logpath
+                self.init_board = init_board
 #Mohammad end
-		self.board = Board(colour)
-		self.timeout = timeout
-		self.ai_counter = 0
-		self.list_of_colours = [BLACK, WHITE]
-		self.players = players
-		self.display_moves = display_moves
-		self.controllers = deque([self._make_controller(c, p) for c, p in zip(self.list_of_colours, self.players)])
-		self.player = self.controllers[0].get_colour()
-		self.board.set_black(4, 3)
-		self.board.set_black(3, 4)
-		self.board.set_white(4, 4)
-		self.board.set_white(3, 3)
-		self.board.mark_moves(self.player)
-		self.previous_move = None
-		self.previous_round_passed = False
+                self.board = Board(colour)
+                self.timeout = timeout
+                self.ai_counter = 0
+                self.list_of_colours = [BLACK, WHITE]
+                self.players = players
+                self.display_moves = display_moves
+                self.controllers = deque([self._make_controller(c, p) for c, p in zip(self.list_of_colours, self.players)])
+                self.player = self.controllers[0].get_colour()
+                for i in range(0,8):
+                    for j in range(0,8):
+                        index = i * 8 + j 
+                        if self.init_board[index]=='B':
+                            self.board.set_black(j,i)
+                        if self.init_board[index]=='W':
+                            self.board.set_white(j,i)
+		####self.board.set_black(4, 3)
+		####self.board.set_black(3, 4)
+		####self.board.set_white(4, 4)
+		####self.board.set_white(3, 3)
+                self.board.mark_moves(self.player)
+                self.previous_move = None
+                self.previous_round_passed = False
 
 	def _make_controller(self, colour, controller_type):
 		if self.showboard:

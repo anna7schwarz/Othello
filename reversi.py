@@ -26,6 +26,8 @@ def main():
     parser.add_argument('--logmoves', help="Log the moves into the file or not", action='store_true')
     parser.add_argument('--log_path', help="path to store the log of game.",
                         type=str, default="logs/log.txt")
+    parser.add_argument('--init_board', help=" initial state of the board.",
+                        type=str, default="000000000000000000000000000WB000000BW000000000000000000000000000")
 #Mohammad end
     args = parser.parse_args()
 
@@ -47,7 +49,8 @@ def main():
         players = ['ai', 'player']
 
     game = Game(
-#Mohammad start 
+#Mohammad start
+                init_board=args.init_board,
                 logmoves=args.logmoves,
                 logpath=args.log_path,
                 showboard=args.showboard,
